@@ -27,6 +27,8 @@ public class User implements Serializable {
     private byte[] photo;
     @OneToMany(mappedBy = "user")
     private List<SoftSkills> softSkills ;
+    @OneToMany(mappedBy ="user")
+    private List<TechSkills> techSkills ;
 
 
 

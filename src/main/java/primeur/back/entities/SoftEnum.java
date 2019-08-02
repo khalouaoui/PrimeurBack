@@ -18,6 +18,15 @@ public enum SoftEnum {
     Learning_capacity("Learning_capacity");
     @Id
     private String nomSkill ;
+
+    public String getNomSkill() {
+        return nomSkill;
+    }
+
+    public void setNomSkill(String nomSkill) {
+        this.nomSkill = nomSkill;
+    }
+
     SoftEnum(String nom) {
         this.nomSkill=nom ;
     }

@@ -1,10 +1,9 @@
-/*package primeur.back.controllers;
+package primeur.back.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import primeur.back.entities.TechSkills;
 import primeur.back.entities.User;
 import primeur.back.repositories.ITechSkills;
 import primeur.back.repositories.IUser;
@@ -20,10 +19,16 @@ public class TechSkillsController {
     public ResponseEntity findAll() {
          return ResponseEntity.ok(techSkillsRepository.findAll()) ;
     }
-    @GetMapping("/{idSkill}")
-    public ResponseEntity<User> findById(@PathVariable Long idSkill) {
+    @PostMapping("/")
+    public ResponseEntity createTechSkill(@RequestBody TechSkills techSkills) {
+        if (techSkills == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
 
-
+        return ResponseEntity.ok(techSkillsRepository.save(techSkills));
     }
+
+
 }
-*/
+
+

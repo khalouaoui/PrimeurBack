@@ -53,16 +53,6 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build()) ;
 
     }
-
-
-    @PostMapping("/")
-    public ResponseEntity createUser(@RequestBody User user) {
-        if (user==null) {
-            return ResponseEntity.badRequest().body(null ) ;
-        }
-        User createdUser=userRepositroy.save(user) ;
-        return ResponseEntity.ok(createdUser) ;
-    }
     @GetMapping("/name/{nom}")
     public ResponseEntity findByNom(@PathVariable String nom) {
         if(nom==null) {
@@ -74,6 +64,36 @@ public class UserController {
         }
         return ResponseEntity.ok(user) ;
 
+    }
+
+
+    @PostMapping("/")
+    public ResponseEntity createUser(@RequestBody User user) {
+        if (user==null) {
+            return ResponseEntity.badRequest().body(null ) ;
+        }
+        User createdUser=userRepositroy.save(user) ;
+        return ResponseEntity.ok(createdUser) ;
+
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity updateUserName(@PathVariable Long id,@RequestBody User newUser) {
+        if(id==null) {
+            return ResponseEntity.badRequest().build() ;
+        }
+        User user=userRepositroy.getOne(id) ;
+        if(user==null) {
+            return ResponseEntity.notFound().build() ;
+        }
+        if(newUser.getNom()!=null) {
+            user.setNom(newUser.getNom());
+        }
+        if(newUser.getPrenom()!=null) {
+            user.setPrenom(newUser.getPrenom());
+        }
+
+        return ResponseEntity.ok(userRepositroy.save(user)) ;
     }
 
 }

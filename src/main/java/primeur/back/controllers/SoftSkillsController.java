@@ -34,7 +34,9 @@ public class SoftSkillsController {
         List<SoftSkills> listSoft=new ArrayList<>() ;
         listSoft.add(soft) ;
         user.setSoftSkills(listSoft);*/
+        softSkills.setNomSkill(softSkills.getNomSkill());
         return ResponseEntity.ok(softSkillsRepository.save(softSkills));
+
     }
     @GetMapping("/all/{id}")
     public ResponseEntity findAllUserSkills(@PathVariable Long id) {

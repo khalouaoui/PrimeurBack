@@ -4,9 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -19,6 +18,9 @@ public class TechSkills {
         private String nomSkill ;
         private String Categorie ;
         private String noteAct ;
+        @ManyToOne
+        @JoinColumn(name="id")
+        private User user ;
 
 
 
