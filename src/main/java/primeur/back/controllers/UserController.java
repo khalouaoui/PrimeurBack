@@ -5,6 +5,7 @@ package primeur.back.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class UserController {
         return ResponseEntity.ok(userRepositroy.findAll()) ;
 
     }
-    @GetMapping("/{id}")
+    /*@GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable(name="id") Long id) {
         if (id == null) {
             return ResponseEntity.badRequest().body("null");
@@ -44,7 +45,16 @@ public class UserController {
         return ResponseEntity.ok(list) ;
 
 
+    }*/
+    @GetMapping("/{id}")
+    public ResponseEntity<User> findById(@PathVariable Long id) {
+        return userRepositroy.findById(id)
+                .map(s-> ResponseEntity.ok().body(s))
+                .orElse(ResponseEntity.notFound().build()) ;
+
     }
+
+
     @PostMapping("/")
     public ResponseEntity createUser(@RequestBody User user) {
         if (user==null) {
@@ -52,6 +62,18 @@ public class UserController {
         }
         User createdUser=userRepositroy.save(user) ;
         return ResponseEntity.ok(createdUser) ;
+    }
+    @GetMapping("/name/{nom}")
+    public ResponseEntity findByNom(@PathVariable String nom) {
+        if(nom==null) {
+            return ResponseEntity.badRequest().build() ;
+        }
+        List<User> user=userRepositroy.findByNom(nom) ;
+        if(user==null) {
+            return ResponseEntity.notFound().build() ;
+        }
+        return ResponseEntity.ok(user) ;
+
     }
 
 }

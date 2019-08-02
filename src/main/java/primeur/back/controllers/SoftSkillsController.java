@@ -8,9 +8,9 @@ import primeur.back.entities.User;
 import primeur.back.repositories.ISoftSkills;
 import primeur.back.repositories.IUser;
 
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.stream.Stream;
+
 
 @RestController
 @RequestMapping("/soft")
@@ -28,8 +28,13 @@ public class SoftSkillsController {
         if (softSkills == null) {
             return ResponseEntity.badRequest().body(null);
         }
+        /*User user=userRepository.getOne(id) ;
         SoftSkills soft = softSkillsRepository.save(softSkills);
-        return ResponseEntity.ok(soft);
+        soft.setUser(user);
+        List<SoftSkills> listSoft=new ArrayList<>() ;
+        listSoft.add(soft) ;
+        user.setSoftSkills(listSoft);*/
+        return ResponseEntity.ok(softSkillsRepository.save(softSkills));
     }
     @GetMapping("/all/{id}")
     public ResponseEntity findAllUserSkills(@PathVariable Long id) {
@@ -41,7 +46,7 @@ public class SoftSkillsController {
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-        List<SoftSkills> userSkill = softSkillsRepository.findByUser(user);
+        List<SoftSkills> userSkill= softSkillsRepository.findByUser(user);
         return ResponseEntity.ok(userSkill) ;
     }
 

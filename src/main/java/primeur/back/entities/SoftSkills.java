@@ -21,8 +21,6 @@ public class SoftSkills implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id")
     private User user ;
-   
-
 
 }
 
