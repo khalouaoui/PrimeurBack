@@ -5,8 +5,11 @@ package primeur.back.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import primeur.back.entities.User;
@@ -22,6 +25,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     private IUser userRepositroy ;
+    /*@Autowired
+    private PasswordEncoder passwordEncoder ;*/
     @GetMapping("/")
     public ResponseEntity findAll() {
         return ResponseEntity.ok(userRepositroy.findAll()) ;
@@ -53,12 +58,24 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build()) ;
 
     }
-    @GetMapping("/name/{nom}")
+    @GetMapping("/last/{nom}")
     public ResponseEntity findByNom(@PathVariable String nom) {
         if(nom==null) {
             return ResponseEntity.badRequest().build() ;
         }
         List<User> user=userRepositroy.findByNom(nom) ;
+        if(user==null) {
+            return ResponseEntity.notFound().build() ;
+        }
+        return ResponseEntity.ok(user) ;
+
+    }
+    @GetMapping("/first/{prenom}")
+    public ResponseEntity findByPrenom(@PathVariable String prenom) {
+        if(prenom==null) {
+            return ResponseEntity.badRequest().build() ;
+        }
+        List<User> user=userRepositroy.findByPrenom(prenom) ;
         if(user==null) {
             return ResponseEntity.notFound().build() ;
         }
@@ -72,13 +89,15 @@ public class UserController {
         if (user==null) {
             return ResponseEntity.badRequest().body(null ) ;
         }
-        User createdUser=userRepositroy.save(user) ;
+
+        User createdUser=userRepositroy.save(user);
+
         return ResponseEntity.ok(createdUser) ;
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity updateUserName(@PathVariable Long id,@RequestBody User newUser) {
+    public ResponseEntity updateUser(@PathVariable Long id,@RequestBody User newUser) {
         if(id==null) {
             return ResponseEntity.badRequest().build() ;
         }
@@ -92,8 +111,30 @@ public class UserController {
         if(newUser.getPrenom()!=null) {
             user.setPrenom(newUser.getPrenom());
         }
+        if(newUser.getPassword()!=null) {
+            user.setPassword(newUser.getPassword());
+        }
+        if(newUser.getEquipe()!=null) {
+            user.setEquipe(newUser.getEquipe());
+        }
+        if(newUser.getFonction()!=null) {
+            user.setFonction((newUser.getFonction()));
+        }
 
         return ResponseEntity.ok(userRepositroy.save(user)) ;
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteUser(@PathVariable Long id) {
+        if(id==null) {
+            return ResponseEntity.badRequest().build() ;
+        }
+        User user=userRepositroy.getOne(id) ;
+        if(user==null) {
+            return ResponseEntity.notFound().build() ;
+        }
+        userRepositroy.delete(user);
+        return ResponseEntity.ok().build() ;
+    }
+
 
 }

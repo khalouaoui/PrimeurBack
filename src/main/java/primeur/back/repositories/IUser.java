@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface IUser extends JpaRepository<User,Long> {
      List<User> findByNom(String Nom) ;
+     List<User> findByPrenom(String Prenom) ;
 
 }
