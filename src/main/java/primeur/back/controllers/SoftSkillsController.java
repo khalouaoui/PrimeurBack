@@ -1,5 +1,6 @@
 package primeur.back.controllers;
 
+import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,10 +10,12 @@ import primeur.back.repositories.ISoftSkills;
 import primeur.back.repositories.IUser;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/soft")
 public class SoftSkillsController {
     @Autowired
@@ -23,22 +26,21 @@ public class SoftSkillsController {
     public ResponseEntity findAll() {
         return ResponseEntity.ok(softSkillsRepository.findAll()) ;
     }
-    @PostMapping("/")
-    public ResponseEntity createSoftSkill(@RequestBody SoftSkills softSkills) {
-        if (softSkills == null) {
+    @PostMapping("/{id}")
+    public ResponseEntity createSoftSkill(@PathVariable Long id, @RequestBody SoftSkills softSkills) {
+        if (softSkills == null || id==null) {
             return ResponseEntity.badRequest().body(null);
         }
-        /*User user=userRepository.getOne(id) ;
-        SoftSkills soft = softSkillsRepository.save(softSkills);
-        soft.setUser(user);
-        List<SoftSkills> listSoft=new ArrayList<>() ;
-        listSoft.add(soft) ;
-        user.setSoftSkills(listSoft);*/
-        softSkills.setNomSkill(softSkills.getNomSkill());
-        return ResponseEntity.ok(softSkillsRepository.save(softSkills));
+        User user=userRepository.getOne(id) ;
+        if(user==null) {
+            return ResponseEntity.notFound().build() ;
+        }
+        softSkills.setUser(user);
+        return ResponseEntity.ok(softSkillsRepository.save(softSkills)) ;
+
 
     }
-    @GetMapping("/all/{id}")
+    /*@GetMapping("/all/{id}")
     public ResponseEntity findAllUserSkills(@PathVariable Long id) {
         if (id == null) {
             return ResponseEntity.badRequest().body("Cannot find skill with null user");
@@ -50,6 +52,6 @@ public class SoftSkillsController {
         }
         List<SoftSkills> userSkill= softSkillsRepository.findByUser(user);
         return ResponseEntity.ok(userSkill) ;
-    }
+    }*/
 
 }

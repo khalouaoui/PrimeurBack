@@ -12,7 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import primeur.back.entities.SoftSkills;
 import primeur.back.entities.User;
+import primeur.back.repositories.ISoftSkills;
 import primeur.back.repositories.IUser;
 
 import java.util.ArrayList;
@@ -25,6 +27,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     private IUser userRepositroy ;
+    @Autowired
+    private ISoftSkills softSkillsRepository ;
     /*@Autowired
     private PasswordEncoder passwordEncoder ;*/
     @GetMapping("/")
@@ -134,6 +138,21 @@ public class UserController {
         }
         userRepositroy.delete(user);
         return ResponseEntity.ok().build() ;
+    }
+
+    /*---------------------------------------------------------------------------------*/
+    @GetMapping("/allsoft/{id}")
+    public ResponseEntity findAllUserSkills(@PathVariable Long id) {
+        if (id == null) {
+            return ResponseEntity.badRequest().body("Cannot find skill with null user");
+        }
+        User user=userRepositroy.getOne(id) ;
+        //User user = userRepository.getOne(id);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<SoftSkills> userSkill= softSkillsRepository.findByUser(user);
+        return ResponseEntity.ok(userSkill) ;
     }
 
 
